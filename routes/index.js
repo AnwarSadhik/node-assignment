@@ -1,2 +1,2 @@
 
-export { userRoutes } from "./user.js"
+export { userRoutes } from "./userRoutes.js"

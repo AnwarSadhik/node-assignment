@@ -1,10 +1,10 @@
-
 import express from "express";
 import dotenv from "dotenv"
 dotenv.config();
 
-import { connectDB } from "./lib/db.js";
+import { connectDB } from "./utils/db.js";
 import * as router from "./routes/index.js"
+import errorHandler from "./middleware/errHandler.js";
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -19,7 +19,9 @@ app.get("/",(req,res) => {
         message: "Server is running"
     })
 })
+
 app.use("/api/user",router.userRoutes)
+
 // 404 route
 app.use((req, res) => {
     res.status(404).json({
@@ -28,7 +30,11 @@ app.use((req, res) => {
     })
 })
 
-app.listen(PORT,async () => {
+// error handler middleware
+app.use(errorHandler);
+
+// start server
+app.listen(PORT,async() => {
     console.log(`Listening on port ${PORT}`);
     await connectDB();
 });

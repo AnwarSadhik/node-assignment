@@ -14,21 +14,28 @@ const userSchema = new mongoose.Schema({
     password: {
         type: String,
         required: true,
+    },
+    createdAt: {
+        type: Date,
+        required: true,
+    },
+    updatedAt: {
+        type: Date
     }
 })
 
 // hash the password before saving it to the database
 userSchema.pre("save", async function(next) {
-    if (!this.isModified(this.password)) return next();
+    if (!this.isModified("password")) return next();
 
     try {
         const salt = await bcrypt.genSalt(10);
         this.password = await bcrypt.hash(this.password, salt);
         next();
     } catch (error) {
-        throw error;
+        next(error);
     }
-})
+});
 
 // compare the password method
 userSchema.methods.comparePassword = async function (password) {
