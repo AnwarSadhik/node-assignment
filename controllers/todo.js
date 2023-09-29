@@ -88,7 +88,7 @@ export const deleteTodo = async (req, res, next) => {
 };
 
 export const getTodos = async (req, res, next) => {
-  const { page = 1, perPage } = req.query;
+  const { page = 1, perPage = 10 } = req.query;
   try {
     const pageNum = parseInt(page);
     const perPageNum = parseInt(perPage);
