@@ -1,4 +1,4 @@
-import User from "../models/user.js";
+import User from "../models/userModel.js";
 import { createJwtToken } from "../utils/token.js";
 
 export const registerUser = async (req, res, next) => {
@@ -22,7 +22,6 @@ export const registerUser = async (req, res, next) => {
       name,
       email,
       password,
-      createdAt: Date.now(),
     });
 
     res.status(201).json({ status: "success", id: user._id });
@@ -123,6 +122,7 @@ export const changePassword = async (req, res, next) => {
     }
 
     user.password = newPassword;
+    user.updatedAt = Date.now();
 
     await user.save();
 

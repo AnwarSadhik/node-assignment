@@ -9,10 +9,8 @@ import errorHandler from "./middleware/errHandler.js";
 const app = express();
 const PORT = process.env.PORT || 5000;
 
-// middlewares
 app.use(express.json());
 
-// routes
 app.get("/",(req,res) => {
     res.status(200).json({
         status: "OK",
@@ -21,8 +19,8 @@ app.get("/",(req,res) => {
 })
 
 app.use("/api/user",router.userRoutes)
+app.use("/api/todos",router.todoRoutes)
 
-// 404 route
 app.use((req, res) => {
     res.status(404).json({
         status: "Not Found",
@@ -30,10 +28,8 @@ app.use((req, res) => {
     })
 })
 
-// error handler middleware
 app.use(errorHandler);
 
-// start server
 app.listen(PORT,async() => {
     console.log(`Listening on port ${PORT}`);
     await connectDB();

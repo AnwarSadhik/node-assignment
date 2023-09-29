@@ -1,12 +1,12 @@
 
-import User from "../models/user.js";
+import User from "../models/userModel.js";
 import { verifyJwtToken } from "../utils/token.js";
 
 export const requireSignIn = async (req, res, next) => {
   try {
     const header = req.headers.authorization;
     if (!header) {
-      return res.status(401).json({ message: "header not present" });
+      return res.status(401).json({ message: "header not present, include a BT header" });
     }
     const token = header.split("Bearer ")[1];
 
@@ -22,7 +22,7 @@ export const requireSignIn = async (req, res, next) => {
 
     const user = await User.findById(userId);
     if (!user) {
-      return res.status(404).json({ message: "User not found, check your token or login again" });
+      return res.status(404).json({ message: "User not found" });
     }
 
     req.user = user;

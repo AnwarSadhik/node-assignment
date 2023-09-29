@@ -1,6 +1,7 @@
 import express from "express";
-import * as authCtrl from "../controllers/user.js";
+
 import { requireSignIn } from "../middleware/authWall.js"
+import * as authCtrl from "../controllers/user.js";
 
 const router = express.Router();
 
