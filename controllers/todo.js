@@ -50,13 +50,13 @@ export const editTodo = async (req, res, next) => {
     todo.text = req.body.text;
     await todo.save();
 
-    res.status(200).json({ message: "Todo update succesfull" })
+    res.status(200).json({ message: "Todo update succesfull" });
   } catch (error) {
     next(error);
   }
-}
+};
 
-export const deleteTodo = async (req, res,next) => {
+export const deleteTodo = async (req, res, next) => {
   const { todoId } = req.params;
 
   if (!mongoose.Types.ObjectId.isValid(todoId)) {
@@ -71,9 +71,11 @@ export const deleteTodo = async (req, res,next) => {
       err.statusCode = 404;
       throw err;
     }
-    
+
     if (String(todo.userId) !== req.user.id) {
-      const err = new Error(`Unauthorized. You can only delete your own todos.`);
+      const err = new Error(
+        `Unauthorized. You can only delete your own todos.`
+      );
       err.statusCode = 403;
       throw err;
     }
@@ -83,4 +85,34 @@ export const deleteTodo = async (req, res,next) => {
   } catch (error) {
     next(error);
   }
-}
+};
+
+export const getTodos = async (req, res, next) => {
+  const { page = 1, perPage } = req.query;
+  try {
+    const pageNum = parseInt(page);
+    const perPageNum = parseInt(perPage);
+
+    if (isNaN(pageNum) || isNaN(perPageNum) || pageNum < 0 || perPageNum < 0) {
+      const err = new Error(`Invalid page or perPage parameters`);
+      err.statusCode = 400;
+      throw err;
+    }
+    const skip = (pageNum - 1) * perPageNum;
+    const todos = await Todo.find({ userId: req.user.id })
+      .skip(skip)
+      .limit(perPageNum)
+      .exec();
+      
+      const totalTodos = await Todo.countDocuments({ userId: req.user._id });
+      res.status(200).json({
+        todos,
+        currentPage: pageNum,
+        totalPages: Math.ceil(totalTodos / perPageNum),
+        totalItems: totalTodos,
+      });
+
+  } catch (error) {
+    next(error);
+  }
+};
