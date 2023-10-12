@@ -4,6 +4,7 @@ dotenv.config();
 import swaggerJSDoc from "swagger-jsdoc";
 import swaggerUI from "swagger-ui-express";
 
+// my imports
 import { connectDB } from "./utils/db.js";
 import * as router from "./routes/index.js";
 import errorHandler from "./middleware/errHandler.js";
